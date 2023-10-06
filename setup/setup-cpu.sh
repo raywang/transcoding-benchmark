@@ -1,14 +1,18 @@
+#!/bin/bash
 #
-# Script for compiling and installing FFmpeg from source on Amazon Linux 2 with support for both x86 and arm instances
+# Script for compiling and installing FFmpeg from source on Amazon Linux 2023 on x86_64 and arm64 instances
 #
+ARCH=$(uname -m)
+ARCH_FLAG_X86="-march=x86-64-v2"
+ARCH_FLAG_ARM64="-march=armv8.4-a+sve -mcpu=neoverse-512tvb"
 
-# 1 - Update host OS
+# 1 - Update host OS, and reboot the instance if needed
 
-sudo yum update -y
+sudo dnf update --releasever=latest -y
 
 # 2 - Install build dependencies & other packages
 
-sudo yum install -y autoconf automake bzip2 bzip2-devel cmake freetype-devel gcc gcc-c++ git libtool make pkgconfig zlib-devel tmux zstd
+sudo dnf install -y autoconf automake bzip2 bzip2-devel cmake freetype-devel gcc gcc-c++ git libtool make pkgconfig zlib-devel tmux zstd
 
 # 3 - Create build directory
 
@@ -21,7 +25,11 @@ curl -O -L -k https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.ta
 tar xjvf nasm-2.15.05.tar.bz2
 cd nasm-2.15.05
 ./autogen.sh
-./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
+if [ $ARCH == "aarch64" ]; then
+    ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64
+else
+    ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_X86
+fi
 make
 make install
 
@@ -31,7 +39,11 @@ cd ~/ffmpeg_sources
 curl -O -L https://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
 tar xzvf yasm-1.3.0.tar.gz
 cd yasm-1.3.0
-./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
+if [ $ARCH == "aarch64" ]; then
+    ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64
+else
+    ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_X86
+fi
 make
 make install
 
@@ -40,7 +52,11 @@ make install
 cd ~/ffmpeg_sources
 git clone --depth 1 https://code.videolan.org/videolan/x264.git
 cd x264
-PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static
+if [ $ARCH == "aarch64" ]; then
+    PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64 --enable-static
+else
+    PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_X86 --enable-static
+fi
 make
 make install
 
@@ -49,7 +65,17 @@ make install
 cd ~/ffmpeg_sources
 git clone https://bitbucket.org/multicoreware/x265_git
 cd ~/ffmpeg_sources/x265_git/build/linux
-cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source
+if [ $ARCH == "aarch64" ]; then
+    cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" \
+        -DCMAKE_C_FLAGS="-O3 $ARCH_FLAG_ARM64" \
+        -DCMAKE_CXX_FLAGS="-O3 $ARCH_FLAG_ARM64" \
+        -DENABLE_SHARED:bool=off ../../source
+else
+    cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" \
+        -DCMAKE_C_FLAGS="-O3 $ARCH_FLAG_X86" \
+        -DCMAKE_CXX_FLAGS="-O3 $ARCH_FLAG_X86" \
+        -DENABLE_SHARED:bool=off ../../source
+fi
 make
 make install
 
@@ -59,7 +85,11 @@ cd ~/ffmpeg_sources
 git clone --depth 1 https://github.com/mstorsjo/fdk-aac
 cd fdk-aac
 autoreconf -fiv
-./configure --prefix="$HOME/ffmpeg_build" --disable-shared
+if [ $ARCH == "aarch64" ]; then
+    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_ARM64 --disable-shared
+else
+    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_X86 --disable-shared
+fi
 make
 make install
 
@@ -69,7 +99,11 @@ cd ~/ffmpeg_sources
 curl -O -L https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz
 tar xzvf lame-3.100.tar.gz
 cd lame-3.100
-./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --disable-shared
+if [ $ARCH == "aarch64" ]; then
+    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_ARM64 --disable-shared
+else
+    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_X86 --disable-shared
+fi
 make
 make install
 
@@ -79,35 +113,56 @@ cd ~/ffmpeg_sources
 curl -O -L https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz
 tar xzvf opus-1.3.1.tar.gz
 cd opus-1.3.1
-./configure --prefix="$HOME/ffmpeg_build" --disable-shared
+if [ $ARCH == "aarch64" ]; then
+    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_ARM64 --disable-shared
+else
+    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_X86 --disable-shared
+fi
 make
 make install
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/
-cp /usr/local/lib64/pkgconfig/libvmaf.pc $HOME/ffmpeg_build/lib/pkgconfig/
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/
+#cp /usr/local/lib64/pkgconfig/libvmaf.pc $HOME/ffmpeg_build/lib/pkgconfig/
 
 # 11 - Compile FFmpeg
 
 cd ~/ffmpeg_sources
-curl -O -L https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2
-tar xjvf ffmpeg-snapshot.tar.bz2
-cd ffmpeg
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
-  --prefix="$HOME/ffmpeg_build" \
-  --pkg-config-flags="--static" \
-  --extra-cflags="-I$HOME/ffmpeg_build/include" \
-  --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
-  --extra-libs=-lpthread \
-  --extra-libs=-lm \
-  --bindir="$HOME/bin" \
-  --enable-gpl \
-  --enable-libfdk_aac \
-  --enable-libfreetype \
-  --enable-libmp3lame \
-  --enable-libopus \
-  --enable-libx264 \
-  --enable-libx265 \
-  --enable-nonfree
+curl -O -L https://ffmpeg.org/releases/ffmpeg-6.0.tar.bz2
+tar xf ffmpeg-6.0.tar.bz2
+cd ffmpeg-6.0
+if [ $ARCH == "aarch64" ]; then
+    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
+      --prefix="$HOME/ffmpeg_build" \
+      --pkg-config-flags="--static" \
+      --extra-cflags="-I$HOME/ffmpeg_build/include $ARCH_FLAG_ARM64" \
+      --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
+      --extra-libs=-lpthread \
+      --extra-libs=-lm \
+      --bindir="$HOME/bin" \
+      --enable-gpl \
+      --enable-libfdk_aac \
+      --enable-libfreetype \
+      --enable-libmp3lame \
+      --enable-libx264 \
+      --enable-libx265 \
+      --enable-nonfree
+else
+    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
+      --prefix="$HOME/ffmpeg_build" \
+      --pkg-config-flags="--static" \
+      --extra-cflags="-I$HOME/ffmpeg_build/include $ARCH_FLAG_X86" \
+      --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
+      --extra-libs=-lpthread \
+      --extra-libs=-lm \
+      --bindir="$HOME/bin" \
+      --enable-gpl \
+      --enable-libfdk_aac \
+      --enable-libfreetype \
+      --enable-libmp3lame \
+      --enable-libx264 \
+      --enable-libx265 \
+      --enable-nonfree
+fi
 make
 make install
 
@@ -121,5 +176,3 @@ hash -d ./ffmpeg
 
 # done
 printf "\nDone.\n"
-
-
