@@ -86,8 +86,10 @@ batch_transcoding_process() {
 
     done
 
-    echo "${output} trancode jobs total cpu_usage:$cpu_usage_total fps:${fps_total} frames per second"
-    echo "${output} trancode jobs total cpu_usage:$cpu_usage_total fps:${fps_total} frames per second" >> ${LOG_FILE}
+    #echo "${output} trancode jobs total cpu_usage:$cpu_usage_total fps:${fps_total} frames per second"
+    #echo "${output} trancode jobs total cpu_usage:$cpu_usage_total fps:${fps_total} frames per second" >> ${LOG_FILE}
+    echo "${output} trancode jobs total fps:${fps_total} frames per second"
+    echo "${output} trancode jobs total fps:${fps_total} frames per second" >> ${LOG_FILE}
 
 }
 
