@@ -29,14 +29,10 @@ mkdir ~/ffmpeg_sources
 
 cd ~/ffmpeg_sources
 curl -O -L -k $NASM_SOURCE
-tar xf nasm-2.15.05.tar.gz
+tar xf nasm-2.15.05.tar.bz2
 cd nasm-2.15.05
 ./autogen.sh
-if [ $ARCH == "aarch64" ]; then
-    ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64
-else
-    ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_X86
-fi
+./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
 make
 make install
 
