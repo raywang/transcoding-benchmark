@@ -5,8 +5,8 @@
 ARCH=$(uname -m)
 ARCH_FLAG_X86="-march=x86-64-v2"
 ARCH_FLAG_ARM64="-march=armv8.4-a+sve -mcpu=neoverse-512tvb"
-#NASM_SOURCE="https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2"
-NASM_SOURCE="https://github.com/netwide-assembler/nasm/archive/refs/tags/nasm-2.16.01.tar.gz"
+#NASM_SOURCE="https://github.com/netwide-assembler/nasm/archive/refs/tags/nasm-2.16.01.tar.gz"
+NASM_SOURCE="https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2"
 YASM_SOURCE="https://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz"
 MP3_SOURCE="https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz"
 #OPUS_SOURCE="https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz"
@@ -29,8 +29,8 @@ mkdir ~/ffmpeg_sources
 
 cd ~/ffmpeg_sources
 curl -O -L -k $NASM_SOURCE
-tar xf nasm-*.tar.gz
-cd nasm-nasm*
+tar xf nasm-2.15.05.tar.gz
+cd nasm-2.15.05
 ./autogen.sh
 if [ $ARCH == "aarch64" ]; then
     ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64
@@ -44,8 +44,8 @@ make install
 
 cd ~/ffmpeg_sources
 curl -O -L $YASM_SOURCE
-tar xzvf yasm-*.tar.gz
-cd yasm-*
+tar xf yasm-1.3.0.tar.gz
+cd yasm-1.3.0
 if [ $ARCH == "aarch64" ]; then
     ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64
 else
@@ -104,8 +104,8 @@ make install
 
 cd ~/ffmpeg_sources
 curl -O -L $MP3_SOURCE
-tar xf lame-*.tar.gz
-cd lame-*
+tar xf lame-3.100.tar.gz
+cd lame-3.100
 if [ $ARChttps://github.com/mstorsjo/fdk-aacH == "aarch64" ]; then
     ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_ARM64 --disable-shared
 else
@@ -118,8 +118,8 @@ make install
 
 cd ~/ffmpeg_sources
 curl -O -L $OPUS_SOURCE
-tar xzvf opus-*.tar.gz
-cd opus-*
+tar xf opus-1.4.tar.gz
+cd opus-1.4
 if [ $ARCH == "aarch64" ]; then
     ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_ARM64 --disable-shared
 else
@@ -135,8 +135,8 @@ make install
 
 cd ~/ffmpeg_sources
 curl -O -L $FFMPEG_SOURCE
-tar xf ffmpeg-*.tar.bz2
-cd ffmpeg-*
+tar xf ffmpeg-6.0.tar.bz2
+cd ffmpeg-6.0
 if [ $ARCH == "aarch64" ]; then
     PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
       --prefix="$HOME/ffmpeg_build" \
