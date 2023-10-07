@@ -10,7 +10,7 @@
 
 ARCH=$(uname -m)
 ARCH_FLAG_X86="-march=x86-64-v2"
-ARCH_FLAG_ARM64="-mcpu=neoverse-512tvb"
+ARCH_FLAG_ARM64="-march=armv8.4-a+sve"
 NASM_SOURCE="https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2"
 YASM_SOURCE="https://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz"
 MP3_SOURCE="https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz"
@@ -58,7 +58,7 @@ cd ~/ffmpeg_sources
 curl -O -L $YASM_SOURCE
 tar xf yasm-1.3.0.tar.gz
 cd yasm-1.3.0
-./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64
+./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" 
 make
 make install
 
@@ -149,7 +149,7 @@ cd ~/ffmpeg_sources
 curl -O -L $MP3_SOURCE
 tar xf lame-3.100.tar.gz
 cd lame-3.100
-if [ $ARChttps://github.com/mstorsjo/fdk-aacH == "aarch64" ]; then
+if [ $ARCH == "aarch64" ]; then
     ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_ARM64 --disable-shared
 else
     ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_X86 --disable-shared
