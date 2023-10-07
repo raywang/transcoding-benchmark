@@ -30,6 +30,9 @@ sudo dnf install -y autoconf automake bzip2 bzip2-devel cmake freetype-devel gcc
 mkdir ~/ffmpeg_sources
 
 # 4 - Compile the NASM assembler
+echo "================================="
+echo "Building NASM..."
+echo "================================="
 
 cd ~/ffmpeg_sources
 curl -O -L -k $NASM_SOURCE
@@ -40,7 +43,16 @@ cd nasm-2.15.05
 make
 make install
 
+echo "================================="
+echo "Building NASM... Done"
+echo "================================="
+
+
+
 # 5 - Compile the YASM assembler
+echo "================================="
+echo "Building YASM..."
+echo "================================="
 
 cd ~/ffmpeg_sources
 curl -O -L $YASM_SOURCE
@@ -50,7 +62,16 @@ cd yasm-1.3.0
 make
 make install
 
+echo "================================="
+echo "Building YASM... Done"
+echo "================================="
+
+
+
 # 6 - Compile x264
+echo "================================="
+echo "Building x264..."
+echo "================================="
 
 cd ~/ffmpeg_sources
 git clone --depth 1 https://code.videolan.org/videolan/x264.git
@@ -63,7 +84,16 @@ fi
 make
 make install
 
+echo "================================="
+echo "Building x264... Done"
+echo "================================="
+
+
+
 # 7 - Compile x265
+echo "================================="
+echo "Building x265..."
+echo "================================="
 
 cd ~/ffmpeg_sources
 git clone https://bitbucket.org/multicoreware/x265_git
@@ -81,8 +111,16 @@ else
 fi
 make
 make install
+echo "================================="
+echo "Building x265... Done"
+echo "================================="
+
+
 
 # 8 - Compile the AAC audio codec
+echo "================================="
+echo "Building AAC..."
+echo "================================="
 
 cd ~/ffmpeg_sources
 git clone --depth 1 https://github.com/mstorsjo/fdk-aac
@@ -96,7 +134,16 @@ fi
 make
 make install
 
+echo "================================="
+echo "Building AAC... Done"
+echo "================================="
+
+
+
 # 9 - Compile MP3 codec
+echo "================================="
+echo "Building MP3..."
+echo "================================="
 
 cd ~/ffmpeg_sources
 curl -O -L $MP3_SOURCE
@@ -110,7 +157,16 @@ fi
 make
 make install
 
+echo "================================="
+echo "Building MP3... Done"
+echo "================================="
+
+
+
 # 10 - Compile the Opus codec
+echo "================================="
+echo "Building Opus..."
+echo "================================="
 
 cd ~/ffmpeg_sources
 curl -O -L $OPUS_SOURCE
@@ -124,10 +180,19 @@ fi
 make
 make install
 
+echo "================================="
+echo "Building Opus... Done"
+echo "================================="
+
+
+
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64/
 #cp /usr/local/lib64/pkgconfig/libvmaf.pc $HOME/ffmpeg_build/lib/pkgconfig/
 
 # 11 - Compile FFmpeg
+echo "================================="
+echo "Building FFmpeg..."
+echo "================================="
 
 cd ~/ffmpeg_sources
 curl -O -L $FFMPEG_SOURCE
@@ -168,6 +233,12 @@ else
 fi
 make
 make install
+
+echo "================================="
+echo "Building FFmpeg... Done"
+echo "================================="
+
+
 
 cd ~/bin
 hash -d ./ffmpeg
