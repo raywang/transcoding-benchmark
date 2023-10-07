@@ -76,11 +76,7 @@ echo "================================="
 cd ~/ffmpeg_sources
 git clone --depth 1 https://code.videolan.org/videolan/x264.git
 cd x264
-if [ $ARCH == "aarch64" ]; then
-    PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64 --enable-static
-else
-    PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_X86 --enable-static
-fi
+PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static
 make
 make install
 
@@ -126,11 +122,7 @@ cd ~/ffmpeg_sources
 git clone --depth 1 https://github.com/mstorsjo/fdk-aac
 cd fdk-aac
 autoreconf -fiv
-if [ $ARCH == "aarch64" ]; then
-    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_ARM64 --disable-shared
-else
-    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_X86 --disable-shared
-fi
+./configure --prefix="$HOME/ffmpeg_build" --disable-shared
 make
 make install
 
@@ -149,11 +141,7 @@ cd ~/ffmpeg_sources
 curl -O -L $MP3_SOURCE
 tar xf lame-3.100.tar.gz
 cd lame-3.100
-if [ $ARCH == "aarch64" ]; then
-    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_ARM64 --disable-shared
-else
-    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_X86 --disable-shared
-fi
+./configure --prefix="$HOME/ffmpeg_build" --disable-shared
 make
 make install
 
@@ -172,11 +160,7 @@ cd ~/ffmpeg_sources
 curl -O -L $OPUS_SOURCE
 tar xf opus-1.4.tar.gz
 cd opus-1.4
-if [ $ARCH == "aarch64" ]; then
-    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_ARM64 --disable-shared
-else
-    ./configure --prefix="$HOME/ffmpeg_build" $ARCH_FLAG_X86 --disable-shared
-fi
+./configure --prefix="$HOME/ffmpeg_build" --disable-shared
 make
 make install
 
