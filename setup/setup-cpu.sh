@@ -2,14 +2,18 @@
 #
 # Script for compiling and installing FFmpeg from source on Amazon Linux 2023 on x86_64 and arm64 instances
 #
+
+# Backup logs
+#ARCH_FLAG_ARM64="-march=armv8.4-a+sve -mcpu=neoverse-512tvb"
+#NASM_SOURCE="https://github.com/netwide-assembler/nasm/archive/refs/tags/nasm-2.16.01.tar.gz"
+#OPUS_SOURCE="https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz"
+
 ARCH=$(uname -m)
 ARCH_FLAG_X86="-march=x86-64-v2"
-ARCH_FLAG_ARM64="-march=armv8.4-a+sve -mcpu=neoverse-512tvb"
-#NASM_SOURCE="https://github.com/netwide-assembler/nasm/archive/refs/tags/nasm-2.16.01.tar.gz"
+ARCH_FLAG_ARM64="-mcpu=neoverse-512tvb"
 NASM_SOURCE="https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2"
 YASM_SOURCE="https://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz"
 MP3_SOURCE="https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz"
-#OPUS_SOURCE="https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz"
 OPUS_SOURCE="https://downloads.xiph.org/releases/opus/opus-1.4.tar.gz"
 FFMPEG_SOURCE="https://ffmpeg.org/releases/ffmpeg-6.0.tar.bz2"
 
@@ -42,11 +46,7 @@ cd ~/ffmpeg_sources
 curl -O -L $YASM_SOURCE
 tar xf yasm-1.3.0.tar.gz
 cd yasm-1.3.0
-if [ $ARCH == "aarch64" ]; then
-    ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64
-else
-    ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_X86
-fi
+./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" $ARCH_FLAG_ARM64
 make
 make install
 
