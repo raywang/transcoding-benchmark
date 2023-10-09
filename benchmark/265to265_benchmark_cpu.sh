@@ -54,9 +54,9 @@ batch_transcoding_process() {
         echo "batch job id $n start..."
         if [ $n -eq $((BATCH_SIZE-1)) ]; then
             echo "please waiting for the transcoding jobs complete..."
-            ffmpeg -y -hwaccel auto -i ${INPUT_FOLDER}/${INPUT_FILE} -c:v ${CODEC} -pix_fmt yuv420p -profile:v ${PROFILE} -preset faster -x265-params bframes=2:rc-lookahead=3 -b:v ${BITRATE} -c:a copy ${TEMP_FOLDER}/${output}_$n.mp4 2>&1 | tee ${temp_log}_$n.log
+            ffmpeg -y -hwaccel auto -i ${INPUT_FOLDER}/${INPUT_FILE} -c:v ${CODEC} -vtag hvc1 -pix_fmt yuv420p -profile:v ${PROFILE} -preset faster -x265-params bframes=2:rc-lookahead=3 -b:v ${BITRATE} -c:a copy ${TEMP_FOLDER}/${output}_$n.mp4 2>&1 | tee ${temp_log}_$n.log
         else
-            tmux new -d "ffmpeg -y -hwaccel auto -i ${INPUT_FOLDER}/${INPUT_FILE} -c:v ${CODEC} -pix_fmt yuv420p -profile:v ${PROFILE} -preset faster -x265-params bframes=2:rc-lookahead=3 -b:v ${BITRATE} -c:a copy ${TEMP_FOLDER}/${output}_$n.mp4 2>&1 | tee ${temp_log}_$n.log"
+            tmux new -d "ffmpeg -y -hwaccel auto -i ${INPUT_FOLDER}/${INPUT_FILE} -c:v ${CODEC} -vtag hvc1 -pix_fmt yuv420p -profile:v ${PROFILE} -preset faster -x265-params bframes=2:rc-lookahead=3 -b:v ${BITRATE} -c:a copy ${TEMP_FOLDER}/${output}_$n.mp4 2>&1 | tee ${temp_log}_$n.log"
         fi
     done
 
