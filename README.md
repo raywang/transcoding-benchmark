@@ -18,28 +18,30 @@ Create the S3 bucket and path for storing input/output files, uploaded the 1080p
 
 ### Benchmark HD/4K transcoding performance on CPU instances
 
-* 1080p h.264 transcoding
+* h.264 transcoding
 
-Usage:  bash 264to264_benchmark_cpu.sh {batch size} {ec2 instance type} {transcoding bitrate}
+Usage:  bash to264_benchmark_cpu.sh <batch size> <transcoding bitrate> <s3 bucket name> <filename>
 
-        batch size: concurrent number of ffmpeg transcoding process (make cpu utilization close to 100%)
-        ec2 instance type: instance type of ec2 for transcoding
-        transcoding bitrate: bitrate for transcoding, e.g. 800k, 2M
+        batch size:             concurrent number of ffmpeg transcoding process (make cpu utilization close to 100%)
+        transcoding bitrate:    bitrate for transcoding, e.g. 800k, 2M
+        s3 bucket name:         name of the bucket, which should include 'input' and 'output' folders                   │
+        file name:              name of the sample file
 Sample:
 
 ```
-bash 264to264_benchmark_cpu.sh 5 C6g.4x 2.5M
+bash to264_benchmark_cpu.sh 5 2.5M <s3 bucket name> <input file>
 ```
 
-* 4K h.265 transcoding
+* h.265 transcoding
 
-Usage:  bash 265to265_benchmark_cpu.sh {batch size} {ec2 instance type} {transcoding bitrate}
+Usage:  bash to265_benchmark_cpu.sh <batch size> <transcoding bitrate> <s3 bucket name> <filename>
 
-        batch size: concurrent number of ffmpeg transcoding process (make cpu utilization close to 100%)
-        ec2 instance type: instance type of ec2 for transcoding
-        transcoding bitrate: bitrate for transcoding, e.g. 800k, 2M
+        batch size:             concurrent number of ffmpeg transcoding process (make cpu utilization close to 100%)
+        transcoding bitrate:    bitrate for transcoding, e.g. 800k, 2M
+        s3 bucket name:         name of the bucket, which should include 'input' and 'output' folders                   │
+        file name:              name of the sample file
 Sample:
 
 ```
-bash 265to265_benchmark_cpu.sh 3 C7g.4x 8M
+bash to265_benchmark_cpu.sh 5 8M <s3 bucket name> <input file>
 ```
