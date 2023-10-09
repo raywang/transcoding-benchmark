@@ -8,7 +8,7 @@
 #NASM_SOURCE="https://github.com/netwide-assembler/nasm/archive/refs/tags/nasm-2.16.01.tar.gz"
 #OPUS_SOURCE="https://archive.mozilla.org/pub/opus/opus-1.3.1.tar.gz"
 
-ARCH=$(uname -m)
+ARCH=$(arch)
 ARCH_FLAG_X86="-march=x86-64-v2"
 ARCH_FLAG_ARM64="-march=armv8.4-a+sve"
 NASM_SOURCE="https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.bz2"

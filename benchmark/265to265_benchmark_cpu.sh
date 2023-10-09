@@ -14,7 +14,7 @@
 # Please make sure INPUT_BUCKET, OUTPUT_BUCKET and INPUT_FILE are set properly
 #
 
-sudo dnf -y install dmidecode
+sudo dnf -y install dmidecode tmux
 
 BATCH_SIZE=$1
 INSTANCE=$(sudo dmidecode -s system-product-name)
@@ -56,7 +56,7 @@ batch_transcoding_process() {
             echo "please waiting for the transcoding jobs complete..."
             ffmpeg -y -hwaccel auto -i ${INPUT_FOLDER}/${INPUT_FILE} -c:v ${CODEC} -pix_fmt yuv420p -profile:v ${PROFILE} -preset faster -x265-params bframes=2:rc-lookahead=3 -b:v ${BITRATE} -c:a copy ${TEMP_FOLDER}/${output}_$n.mp4 2>&1 | tee ${temp_log}_$n.log
         else
-            ffmpeg -y -hwaccel auto -i ${INPUT_FOLDER}/${INPUT_FILE} -c:v ${CODEC} -pix_fmt yuv420p -profile:v ${PROFILE} -preset faster -x265-params bframes=2:rc-lookahead=3 -b:v ${BITRATE} -c:a copy ${TEMP_FOLDER}/${output}_$n.mp4 2>&1 | tee ${temp_log}_$n.log
+            tmux new -d "ffmpeg -y -hwaccel auto -i ${INPUT_FOLDER}/${INPUT_FILE} -c:v ${CODEC} -pix_fmt yuv421p -profile:v ${PROFILE} -preset faster -x265-params bframes=2:rc-lookahead=3 -b:v ${BITRATE} -c:a copy ${TEMP_FOLDER}/${output}_$n.mp4 2>&1 | tee ${temp_log}_$n.log"
         fi
     done
 
